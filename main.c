@@ -9,14 +9,6 @@
 int main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-    // Configure GPIO
-    P1DIR |= BIT0;
-    P1OUT |= BIT0;
-
-    // Disable the GPIO power-on default high-impedance mode to activate
-    // previously configured port settings
-    PM5CTL0 &= ~LOCKLPM5;
-	//--Initial Setup--
 
 
 	if(Initial_Boot()){//check to see if this is the first time the device has booted up
