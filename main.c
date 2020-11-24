@@ -4,6 +4,7 @@
 /**
  * main.c
  */
+#include <msp430.h>
 int main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
@@ -11,7 +12,7 @@ int main(void)
 	//--Initial Setup--
 
 
-	if(Initial_Boot){//check to see if this is the first time the device has booted up
+	if(Initial_Boot()){//check to see if this is the first time the device has booted up
 	    //Go to Initial boot sequence
 	    //Remember, we must wait 15 minutes before broadcasts
 
@@ -32,7 +33,7 @@ int main(void)
  * an initial boot, it should assume that it is an initial boot
  *
  */
-bool Initial_Boot(){
+int Initial_Boot(){
 
-    return true;
+    return 1;
 }
