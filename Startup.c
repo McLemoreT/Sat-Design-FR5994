@@ -71,11 +71,18 @@
  *          Avg frequency 32kHz?
  *  ACLK =  Max frequency 16mHz
  *          Avg frequency ???
+ *
+ *
+ *          Despite the information listed above, it appears that the ACLK
+ *          Is running at something like 500kHz based on my testing. So
+ *          if I divide the clock by 8, and divide the input to the clock by 8
+ *          I get a 64 time division. Then I set CCR0 value (The value when the interrupt fire)
+ *          To 60,000 then the interrupt should fire every 15 seconds
  */
 
 #include "Startup.h"
 #include <msp430.h>
-int time = 0;
+int time = 0; //Keep track of how many times the interrupt fired
 void Boot(){
 
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
@@ -89,9 +96,13 @@ void Boot(){
     PM5CTL0 &= ~LOCKLPM5;
 
     TA0CCTL0 = CCIE;                        // TACCR0 interrupt enabled
-    TA0CCR0 = 62500;
-    TA0CTL = TASSEL__SMCLK + MC__UP + ID_0 + ID_1 + ID_2;        // SMCLK, UP mode
+    TA0CCR0 = 65000;
+    TA0CTL = TASSEL__SMCLK + MC__UP + ID_3;        // SMCLK, UP mode, Clock divider 8
+    TA0EX0 = TAIDEX_7;                          //Input divider expansion. These bits along with the ID bits select the divider for the input clock.
 
+
+    //CSCTL0_H = CSKEY_H;                     // Unlock CS registers
+    //CSCTL3 = DIVA__4;                       //This should divide the clock directly, but doesn't seem t do that
 
 
     __bis_SR_register(LPM0_bits + GIE);     // Enter LPM0 w/ interrupt
@@ -108,5 +119,17 @@ void __attribute__ ((interrupt(TIMER0_A0_VECTOR))) Timer0_A0_ISR (void)
 #error Compiler not supported!
 #endif
 {
-    P1OUT ^= BIT0;
+    if(time > 120){ //If it has been 30 minutes
+        if(time > 180){ //If it has been 45 minutes
+            /* Leave low power mode and go back to finish boot operations
+             * Might be able to do this by calling another method in the Startup
+             * file, but then we would have to ALSO call main in order to go back
+             * to that. Problem to be solved.
+            */
+
+        }
+        time = time + 1; //It's been 30 minutes, but not 45 yet
+        //Call program function that allows operations after 30 minutes
+    }
+    time = time + 1; //It hasn't even been 30 minutes yet
 }
