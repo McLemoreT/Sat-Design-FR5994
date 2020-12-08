@@ -12,7 +12,7 @@ int main(void)
 
 
 	if(Initial_Boot()){//check to see if this is the first time the device has booted up
-	    //Go to Initial boot sequence
+	    Boot();//Go to Initial boot sequence
 	    //Remember, we must wait 15 minutes before broadcasts
 
 	}else{
@@ -20,7 +20,9 @@ int main(void)
 	    //Send a message to ground control that the system just rebooted and is back online
 	}
 
+while(1){
 
+}
 	return 0;
 }
 
