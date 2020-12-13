@@ -73,7 +73,7 @@
  *          Avg frequency ???
  *
  *
- *          Despite the information listed above, it appears that the ACLK
+ *          Despite the information listed above, it appears that the SMCLK
  *          Is running at something like 500kHz based on my testing. So
  *          if I divide the clock by 8, and divide the input to the clock by 8
  *          I get a 64 time division. Then I set CCR0 value (The value when the interrupt fire)
